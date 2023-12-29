@@ -1,0 +1,16 @@
+1. npm init -y
+2. npm i apollo-server graphql
+3. npm i nodemon -D    (-D:package.json파일에서 devDependencies로 설치)
+4. server.js 파일 생성
+5. .gitignore 파일 생성
+ - 파일안에 'node_modules/' 입력
+6. git init
+7. package.json에서 scripts부분 수정
+ - (변경전)
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+- (변경후)
+"scripts": {
+    "dev": "nodemon server.js"
+  },
