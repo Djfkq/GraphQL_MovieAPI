@@ -14,3 +14,4 @@
 "scripts": {
     "dev": "nodemon server.js"
   },
+8. package.json에서 "type":"module" 추가
