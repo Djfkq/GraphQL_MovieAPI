@@ -3,7 +3,7 @@ import { ApolloServer, gql } from "apollo-server";
 //package.json에서 type:"module"로 해야 위에처럼 import로 가능하고, 아니면 아래처럼 require 써야함
 // const {ApolloServer, gql} = require("apollo-server")
 
-const tweets = [
+let tweets = [
   {
     id: "1",
     text: "first one",
@@ -45,6 +45,23 @@ const resolvers = {
     },
     tweet(root, { id }) {
       return tweets.find((tweet) => tweet.id === id);
+    },
+  },
+  Mutation: {
+    postTweet(root, { text, userId }) {
+      const newTweet = {
+        id: tweets.length + 1,
+        text: text,
+        // text
+      };
+      tweets.push(newTweet);
+      return newTweet;
+    },
+    deleteTweet(root, { id }) {
+      const tweet = tweets.find((tweet) => tweet.id === id);
+      if (!tweet) return false;
+      tweets = tweets.filter((tweet) => tweet.id !== id);
+      return true;
     },
   },
 };
