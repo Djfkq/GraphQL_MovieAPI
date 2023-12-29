@@ -12,9 +12,16 @@ const typeDefs = gql`
     text: String
     author: User
   }
+  # Query : Rest_API에서 Get 기능
   type Query {
     allTweets: [Tweet]
     tweet(id: ID): Tweet
+  }
+  # Mutation : Rest_API에서 POST, PUT, DELETE 기능
+  # mutation {} 이런식으로 쿼리 쓸 때 mutation 붙여야함
+  type Mutation {
+    postTweet(text: String, userId: ID): Tweet
+    deleteTweet(id:ID): Boolean
   }
 `;
 

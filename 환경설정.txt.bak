@@ -1,5 +1,3 @@
-0. GraphQL vscode extension 설치
-https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql
 1. npm init -y
 2. npm i apollo-server graphql
 3. npm i nodemon -D    (-D:package.json파일에서 devDependencies로 설치)
