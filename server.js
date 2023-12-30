@@ -26,8 +26,14 @@ const typeDefs = gql`
     id: ID!
     firstName: String!
     lastName: String!
+    """
+    Is the sum of firstName + lastName as String
+    """
     fullName: String!
   }
+  """
+  Tweet object represents a resource for a Tweet
+  """
   type Tweet {
     id: ID!
     text: String!
@@ -43,6 +49,9 @@ const typeDefs = gql`
   # mutation {} 이런식으로 쿼리 쓸 때 mutation 붙여야함
   type Mutation {
     postTweet(text: String!, userId: ID!): Tweet!
+    """
+    Deletes a Tweet if found, else return false
+    """
     deleteTweet(id: ID!): Boolean!
   }
 `;
