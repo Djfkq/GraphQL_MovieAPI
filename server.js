@@ -7,18 +7,26 @@ let tweets = [
   {
     id: "1",
     text: "first one",
+    userId: "2",
   },
   {
     id: "2",
     text: "second one",
+    userId: "1",
   },
 ];
+
+let users = [
+  { id: "1", firstName: "nico", lastName: "las" },
+  { id: "2", firstName: "Elon", lastName: "Musk" },
+];
+
 const typeDefs = gql`
   type User {
     id: ID!
-    username: String!
     firstName: String!
     lastName: String!
+    fullName: String!
   }
   type Tweet {
     id: ID!
@@ -27,6 +35,7 @@ const typeDefs = gql`
   }
   # Query : Rest_API에서 Get 기능
   type Query {
+    allUsers: [User!]!
     allTweets: [Tweet!]!
     tweet(id: ID!): Tweet
   }
@@ -41,18 +50,28 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     allTweets() {
+      console.log("allTweets called")
       return tweets;
     },
     tweet(root, { id }) {
       return tweets.find((tweet) => tweet.id === id);
     },
+    allUsers() {
+      // console.log("all user called");
+      return users;
+    },
   },
   Mutation: {
     postTweet(root, { text, userId }) {
+      const user = users.find(user => user.id == userId)
+      if (!user){
+        return
+      }
       const newTweet = {
         id: tweets.length + 1,
         text: text,
         // text
+        userId
       };
       tweets.push(newTweet);
       return newTweet;
@@ -64,6 +83,18 @@ const resolvers = {
       return true;
     },
   },
+  User: {
+    fullName({ firstName, lastName }) {
+      // console.log("full name called");
+      return `${firstName} ${lastName}`;
+    },
+  },
+  Tweet : {
+    author({userId}){
+      console.log("author called")
+      return users.find((user)=>user.id === userId)
+    }
+  }
 };
 const server = new ApolloServer({ typeDefs, resolvers });
 
