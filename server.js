@@ -41,9 +41,11 @@ const typeDefs = gql`
   }
   # Query : Rest_API에서 Get 기능
   type Query {
+    allMovies: [Movie!]!
     allUsers: [User!]!
     allTweets: [Tweet!]!
     tweet(id: ID!): Tweet
+    movie(id: String!): Movie
   }
   # Mutation : Rest_API에서 POST, PUT, DELETE 기능
   # mutation {} 이런식으로 쿼리 쓸 때 mutation 붙여야함
@@ -54,12 +56,35 @@ const typeDefs = gql`
     """
     deleteTweet(id: ID!): Boolean!
   }
-`;
 
+  type Movie {
+    id: Int!
+    url: String!
+    imdb_code: String!
+    title: String!
+    title_english: String!
+    title_long: String!
+    slug: String!
+    year: Int!
+    rating: Float!
+    runtime: Float!
+    genres: [String]!
+    summary: String
+    description_full: String!
+    synopsis: String
+    yt_trailer_code: String!
+    language: String!
+    background_image: String!
+    background_image_original: String!
+    small_cover_image: String!
+    medium_cover_image: String!
+    large_cover_image: String!
+  }
+`;
 const resolvers = {
   Query: {
     allTweets() {
-      console.log("allTweets called")
+      console.log("allTweets called");
       return tweets;
     },
     tweet(root, { id }) {
@@ -69,18 +94,28 @@ const resolvers = {
       // console.log("all user called");
       return users;
     },
+    allMovies() {
+      return fetch("https://yts.mx/api/v2/list_movies.json")
+        .then((r) => r.json())
+        .then((json) => json.data.movies);
+    },
+    movie(_, { id }) {
+      return fetch(`https://yts.mx/api/v2/movie_details.json?movie_id=${id}`)
+        .then((r) => r.json())
+        .then((json) => json.data.movie);
+    },
   },
   Mutation: {
     postTweet(root, { text, userId }) {
-      const user = users.find(user => user.id == userId)
-      if (!user){
-        return
+      const user = users.find((user) => user.id == userId);
+      if (!user) {
+        return;
       }
       const newTweet = {
         id: tweets.length + 1,
         text: text,
         // text
-        userId
+        userId,
       };
       tweets.push(newTweet);
       return newTweet;
@@ -98,12 +133,12 @@ const resolvers = {
       return `${firstName} ${lastName}`;
     },
   },
-  Tweet : {
-    author({userId}){
-      console.log("author called")
-      return users.find((user)=>user.id === userId)
-    }
-  }
+  Tweet: {
+    author({ userId }) {
+      console.log("author called");
+      return users.find((user) => user.id === userId);
+    },
+  },
 };
 const server = new ApolloServer({ typeDefs, resolvers });
 
